@@ -1,26 +1,10 @@
 import prisma from "../config/prisma.js";
 
-export async function insertUser(username, password) {
-  await prisma.user.create({
+export async function insertGameplay(level) {
+  const currentGame = await prisma.gameplay.createManyAndReturn({
     data: {
-      username: `${username}`,
-      password: `${password}`,
+      level: level,
     },
   });
+  return currentGame;
 }
-
-// export async function insertfolder(userId, title) {
-//   await prisma.folders.create({
-//     data: {
-//       title: title,
-//       authorId: userId,
-//     },
-//   });
-// }
-
-// export async function insertFiles(data) {
-//   await prisma.files.createMany({
-//     data,
-//     skipDuplicates: true,
-//   });
-// }

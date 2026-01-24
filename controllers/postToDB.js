@@ -1,14 +1,9 @@
-import { insertUser } from "../prisma_queries/create.js";
-import { matchedData } from "express-validator";
-import { hash } from "bcryptjs";
+import { insertGameplay } from "../prisma_queries/create.js";
 
-export async function addNewUser(req, res, next) {
+export async function startGame(req, res, next) {
   try {
-    const { username, password } = matchedData(req);
-    const hashedPassword = await hash(password, 10);
-    const usernameLowerCase = username.toLowerCase();
-    await insertUser(usernameLowerCase, hashedPassword);
-    res.sendStatus(200);
+    const currentGame = await insertGameplay(Number(req.params.level));
+    res.status(200).json(currentGame);
   } catch (err) {
     return next(err);
   }
