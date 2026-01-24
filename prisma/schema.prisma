@@ -14,8 +14,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Gameplay {
   id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
+  level    Int
+  startAt  DateTime @default(now())
+  endAt    DateTime?
+  waldo    Boolean @default(false)
+  wenda    Boolean @default(false)
+  wizard   Boolean @default(false)
+  odlaw    Boolean @default(false)
+  player   String? @unique
 }

@@ -1,12 +1,11 @@
 {
-  "name": "template3-expressjs",
+  "name": "where-is-waldo-api",
   "version": "1.0.0",
-  "description": "This express template is build as a RESTAPI and made in a way only specific sites can access its data",
+  "description": "This is the backend api of the Where's Waldo App",
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "copy-assets": "cp -R views dist && cp -R public dist",
-    "build": "npx prisma generate && npx tsc && npm run copy-assets",
+    "build": "npx prisma generate && npx tsc",
     "start": "node dist/app.js",
     "dev": "node --watch app.js",
     "prismaGen": "npx prisma generate",
@@ -16,38 +15,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChoforJr/template3-expressjs.git"
+    "url": "git+https://github.com/ChoforJr/where-is-waldo-api.git"
   },
   "keywords": [],
   "author": "FORSAKANG CHOFOR JUNIOR",
   "license": "",
   "bugs": {
-    "url": "https://github.com/ChoforJr/template3-expressjs/issues"
+    "url": "https://github.com/ChoforJr/where-is-waldo-api/issues"
   },
-  "homepage": "https://github.com/ChoforJr/template3-expressjs#readme",
+  "homepage": "https://github.com/ChoforJr/where-is-waldo-api#readme",
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2",
-    "node-cron": "^4.2.1",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0"
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
-    "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
-    "@types/passport": "^1.0.17",
-    "@types/passport-local": "^1.0.38",
-    "ejs-lint": "^2.0.1",
     "prisma": "^6.19.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"

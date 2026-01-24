@@ -1,19 +1,19 @@
 import { Router } from "express";
+import {
+  readGameplays,
+  readGameplayByID,
+  readGameplayByLevel,
+  readFinishedGameplays,
+} from "../controllers/readDB.js";
 
 const indexRouter = Router();
 
-indexRouter.get("/testCors", (req, res) => {
-  res.json({
-    message: "it worked",
-  });
-});
+indexRouter.get("/gameplay/all", readGameplays);
 
-indexRouter.get("/profile", (req, res, next) => {
-  // If we are here, the JWT was valid
-  res.json({
-    message: "You made it to the secure route",
-    user: req.user, // This is the decoded token payload
-  });
-});
+indexRouter.get("/gameplay/finished", readFinishedGameplays);
+
+indexRouter.get("/gameplay/:gameID", readGameplayByID);
+
+indexRouter.get("/gameplay/level/:level", readGameplayByLevel);
 
 export default indexRouter;

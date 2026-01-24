@@ -1,13 +1,12 @@
-# template3-expressjs
+# WHERE IS WALDO API
 
-This express template is build as a RESTAPI and made in a way only specific sites can access its data
+This is the backend api of the Where's Waldo App
+
+# WHERE IS WALDO CLIENT GITHUB REPO
+
+https://github.com/ChoforJr/where-is-waldo
 
 # Author : FORSAKANG CHOFOR JUNIOR
-
-# This express template using prisma
-
-It will contain some files you may not need It is up to you remove and add
-what-ever you need
 
 # Run the command below in your terminal to genrate a key for secret key
 

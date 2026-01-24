@@ -1,12 +1,11 @@
 import express from "express";
-import authRouter from "./routes/authRouter.js";
+import indexRouter from "./routes/indexRouter.js";
 import path from "node:path";
 import dotenv from "dotenv";
-import "./config/passport.js";
 import cors from "cors";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-const whitelist = [process.env.ALLOWED_URL1, process.env.ALLOWED_URL2];
+const whitelist = [process.env.ALLOWED_URL1];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -38,11 +37,10 @@ app.use(cors(corsOptions));
 
 console.log("--- CORS DEBUG ---");
 console.log("Allowed URL 1:", process.env.ALLOWED_URL1);
-console.log("Allowed URL 2:", process.env.ALLOWED_URL2);
 console.log("Current CORS Options:", corsOptions.origin);
 console.log("------------------");
 
-app.use("/", authRouter);
+app.use("/", indexRouter);
 
 app.use((err, req, res, next) => {
   if (err.message === "Not allowed by CORS") {
