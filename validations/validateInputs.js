@@ -1,7 +1,7 @@
 import { body, validationResult } from "express-validator";
 
 const validBoards = ["board1", "board2", "board3", "board4"];
-const validCharacters = ["waldo", "wenda", "wizard", "odlaw"];
+const validCharacters = ["waldo", "wilma", "wizard", "odlaw"];
 
 export const validateLocationInputsRules = [
   body("board")

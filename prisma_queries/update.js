@@ -11,7 +11,7 @@ export async function updateCharacterAndCheckWin(gameID, character) {
 
     const allFound =
       updatedGame.waldo &&
-      updatedGame.wenda &&
+      updatedGame.wilma &&
       updatedGame.wizard &&
       updatedGame.odlaw;
 

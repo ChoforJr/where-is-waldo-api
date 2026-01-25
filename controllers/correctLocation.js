@@ -10,7 +10,7 @@ export const correctLocation = {
         y: 396,
       },
     },
-    wenda: {
+    wilma: {
       min: {
         x: 347,
         y: 296,
@@ -52,7 +52,7 @@ export const correctLocation = {
         y: 35,
       },
     },
-    wenda: {
+    wilma: {
       min: {
         x: 217,
         y: 317,
@@ -94,7 +94,7 @@ export const correctLocation = {
         y: 223,
       },
     },
-    wenda: {
+    wilma: {
       min: {
         x: 246,
         y: 304,
@@ -136,7 +136,7 @@ export const correctLocation = {
         y: 107,
       },
     },
-    wenda: {
+    wilma: {
       min: {
         x: 234,
         y: 361,

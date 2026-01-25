@@ -20,7 +20,7 @@ model Gameplay {
   startAt DateTime  @default(now())
   endAt   DateTime?
   waldo   Boolean   @default(false)
-  wenda   Boolean   @default(false)
+  wilma   Boolean   @default(false)
   wizard  Boolean   @default(false)
   odlaw   Boolean   @default(false)
   player  String?
