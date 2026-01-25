@@ -15,13 +15,13 @@ datasource db {
 }
 
 model Gameplay {
-  id       Int    @id @default(autoincrement())
-  level    Int
-  startAt  DateTime @default(now())
-  endAt    DateTime?
-  waldo    Boolean @default(false)
-  wenda    Boolean @default(false)
-  wizard   Boolean @default(false)
-  odlaw    Boolean @default(false)
-  player   String? @unique
+  id      Int       @id @default(autoincrement())
+  level   Int
+  startAt DateTime  @default(now())
+  endAt   DateTime?
+  waldo   Boolean   @default(false)
+  wenda   Boolean   @default(false)
+  wizard  Boolean   @default(false)
+  odlaw   Boolean   @default(false)
+  player  String?
 }
