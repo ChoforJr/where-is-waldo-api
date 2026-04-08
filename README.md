@@ -2,6 +2,10 @@
 
 A RESTful backend API for the **Where's Waldo** photo tagging game. This server manages game sessions, player progress, character locations, and gameplay statistics.
 
+## 🔗 Related Projects
+
+- **Client Repository:** [where-is-waldo](https://github.com/ChoforJr/where-is-waldo)
+
 ## 📋 Table of Contents
 
 - [Features](#features)
