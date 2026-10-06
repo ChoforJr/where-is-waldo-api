@@ -56,4 +56,13 @@ Socket clients connect to the API origin, then emit `game:join` with a gameplay 
 - `npm test` — run unit tests.
 - `npx prisma migrate dev --name descriptive_change` — create a development migration.
 
-For deployment set exact comma-separated frontend origins in `ALLOWED_ORIGINS`, apply migrations with `prisma migrate deploy`, and use HTTPS so production session cookies are secure. Production auth cookies use `SameSite=None; Secure` for cross-origin frontend/API deployments, while state-changing auth requests validate the configured origin.
+For Render deployment, configure:
+
+- **Build Command:** `npm install && npm run build`
+- **Pre-Deploy Command:** `npm run prisma:migrate:deploy`
+- **Start Command:** `npm start`
+- **Health Check Path:** `/health`
+
+Set `DATABASE_URL` to the production PostgreSQL connection string and `ALLOWED_ORIGINS` to the exact comma-separated frontend origins. Run migrations against the production database before serving traffic; if the Render plan does not provide a pre-deploy command, run `npm run prisma:migrate:deploy` once from the API service's Shell before redeploying. Do not point production migrations at a development database.
+
+Use HTTPS so production session cookies are secure. Production auth cookies use `SameSite=None; Secure` for cross-origin frontend/API deployments, while state-changing auth requests validate the configured origin.
