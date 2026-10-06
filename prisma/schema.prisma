@@ -24,4 +24,29 @@ model Gameplay {
   wizard  Boolean   @default(false)
   odlaw   Boolean   @default(false)
   player  String?
+  userId  Int?
+  user    User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  sessions     Session[]
+  gameplays    Gameplay[]
+}
+
+model Session {
+  id        String   @id
+  tokenHash String   @unique
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }

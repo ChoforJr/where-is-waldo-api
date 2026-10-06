@@ -1,243 +1,59 @@
 # Where's Waldo API
 
-A RESTful backend API for the **Where's Waldo** photo tagging game. This server manages game sessions, player progress, character locations, and gameplay statistics.
+TypeScript Express API and Socket.IO server for the Where's Waldo photo tagging game.
 
-## 🔗 Related Projects
+## Stack and security
 
-- **Client Repository:** [where-is-waldo](https://github.com/ChoforJr/where-is-waldo)
+- Express 5, TypeScript strict mode, PostgreSQL, Prisma.
+- Socket.IO gameplay rooms publish live state changes and completed leaderboard entries.
+- Zod validates input; Helmet adds security headers; CORS is restricted to configured origins; login and registration are rate limited.
+- Authentication uses bcryptjs password hashes and opaque random HttpOnly session cookies. Only SHA-256 hashes of session tokens are stored in the database.
 
-## 📋 Table of Contents
+## Setup
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Setup](#setup)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Project Structure](#project-structure)
-- [Development](#development)
-- [Related Projects](#related-projects)
-- [Author](#author)
+Requirements: Node.js 20.19+ and PostgreSQL.
 
-## ✨ Features
-
-- Manage multiple game levels with different difficulty settings
-- Track player progress and game sessions
-- Validate character location detection with coordinates
-- Record finished gameplay statistics
-- Input validation and error handling
-- CORS-enabled for secure cross-origin requests
-- Password hashing with bcryptjs
-- Automated scheduled tasks with node-cron
-
-## 🛠️ Tech Stack
-
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Language:** JavaScript (with TypeScript support)
-- **Database:** PostgreSQL
-- **ORM:** Prisma
-- **Authentication:** bcryptjs
-- **Middleware:** CORS, express-validator
-- **Task Scheduler:** node-cron
-- **Build Tools:** TypeScript, tsx
-
-## 📦 Prerequisites
-
-- Node.js (v16 or higher)
-- npm or yarn
-- PostgreSQL database
-- Git
-
-## 🚀 Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/ChoforJr/where-is-waldo-api.git
-cd where-is-waldo-api
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-## ⚙️ Setup
-
-1. Create a `.env` file in the root directory:
+Install dependencies and configure `.env`:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/where_is_waldo"
-ALLOWED_URL1="http://localhost:3000"
+DATABASE_URL=postgresql://postgres:password@localhost:5432/where_is_waldo_api
+ALLOWED_ORIGINS=http://localhost:3000
+PORT=5000
 ```
 
-2. Generate Prisma Client and run migrations:
+Apply migrations and generate Prisma Client:
 
-```bash
-npm run prismaGen
-npm run prismaMg
+```sh
+npm install
+npx prisma migrate deploy
+npx prisma generate
 ```
 
-3. Build TypeScript (if needed):
+Run locally with `npm run dev`, or build and start with `npm run build && npm start`. The API and WebSocket endpoint share port 5000. `GET /health` is available for health checks.
 
-```bash
-npm run build
-```
+## Routes
 
-## 📖 Usage
+| Method | Route | Purpose |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Create an account and session |
+| POST | `/api/auth/login` | Authenticate and create a session |
+| GET | `/api/auth/me` | Get current session user (protected) |
+| GET | `/api/auth/stats` | Get account-linked round summary (protected) |
+| POST | `/api/auth/logout` | Revoke current session (protected) |
+| GET | `/api/gameplay/finished` | Public completed-game leaderboard source |
+| POST | `/api/gameplay/level/:level` | Start a game on board 1–4 |
+| GET | `/api/gameplay/:gameID` | Load a game |
+| PATCH | `/api/gameplay/:gameID/character` | Submit a character location guess |
+| PATCH | `/api/gameplay/:gameID/player` | Save a completed game's player name; links it when signed in |
 
-### Development
+Socket clients connect to the API origin, then emit `game:join` with a gameplay ID and `game:leave` when done. Rooms receive `game:state`, `game:character:found`, and `game:completed`; connected clients receive `leaderboard:updated`.
 
-Start the development server with file watching:
+## Commands
 
-```bash
-npm run dev
-```
+- `npm run dev` — watch/restart the TypeScript server.
+- `npm run build` — generate Prisma Client and compile.
+- `npm run typecheck` — check source types without emitting.
+- `npm test` — run unit tests.
+- `npx prisma migrate dev --name descriptive_change` — create a development migration.
 
-The server runs on `http://localhost:3000` by default.
-
-### Production
-
-Build and start the production server:
-
-```bash
-npm run build
-npm start
-```
-
-## 🔌 API Endpoints
-
-### Get Game Sessions
-
-**GET** `/gameplay/all`
-
-- Retrieve all game sessions
-- Returns: Array of gameplay records
-
-**GET** `/gameplay/finished`
-
-- Retrieve all completed game sessions
-- Returns: Array of finished gameplay records
-
-**GET** `/gameplay/:gameID`
-
-- Retrieve specific game session by ID
-- Parameters: `gameID` (number)
-- Returns: Single gameplay record
-
-**GET** `/gameplay/level/:level`
-
-- Retrieve game sessions by difficulty level
-- Parameters: `level` (number)
-- Returns: Array of gameplay records
-
-### Create Game Session
-
-**POST** `/gameplay/level/:level`
-
-- Start a new game session at a specific level
-- Parameters: `level` (number)
-- Body: Player and game initialization data
-- Returns: Created gameplay record
-
-### Update Game Progress
-
-**PATCH** `/gameplay/:gameID/player`
-
-- Update player information (user name, score, etc.)
-- Parameters: `gameID` (number)
-- Body: Player data (validated)
-- Returns: Updated gameplay record
-
-**PATCH** `/gameplay/:gameID/character`
-
-- Update character location (mark character as found)
-- Parameters: `gameID` (number)
-- Body: Character location coordinates (validated)
-- Returns: Updated character record
-
-## 📁 Project Structure
-
-```
-.
-├── app.js                    # Express app configuration
-├── package.json              # Dependencies and scripts
-├── tsconfig.json             # TypeScript configuration
-├── prisma.config.ts          # Prisma configuration
-│
-├── config/
-│   └── prisma.js             # Prisma setup and client export
-│
-├── routes/
-│   └── indexRouter.js        # API route definitions
-│
-├── controllers/              # Business logic handlers
-│   ├── readDB.js             # GET request handlers
-│   ├── postToDB.js           # POST request handlers
-│   ├── putToDB.js            # PATCH request handlers
-│   └── deleteFromDB.js       # DELETE request handlers
-│
-├── prisma_queries/           # Reusable database queries
-│   ├── create.js             # Create operations
-│   ├── read.js               # Read operations
-│   ├── update.js             # Update operations
-│   └── delete.js             # Delete operations
-│
-├── validations/
-│   └── validateInputs.js     # Input validation rules
-│
-├── prisma/
-│   ├── schema.prisma         # Database schema definition
-│   └── migrations/           # Database migration files
-│
-└── public/                   # Static assets
-    ├── index.js
-    └── style.css
-```
-
-## 🧑‍💻 Development
-
-### Available Scripts
-
-| Script                | Description                              |
-| --------------------- | ---------------------------------------- |
-| `npm run dev`         | Start development server with hot reload |
-| `npm run build`       | Build TypeScript to JavaScript           |
-| `npm start`           | Run production build                     |
-| `npm run prismaGen`   | Generate Prisma Client                   |
-| `npm run prismaMg`    | Run Prisma migrations                    |
-| `npm run startRawSql` | Generate and view raw SQL                |
-| `npm run watchRawSql` | Watch and update raw SQL                 |
-
-### Database Management
-
-- **View data in Prisma Studio:**
-
-  ```bash
-  npx prisma studio
-  ```
-
-- **Create new migration:**
-
-  ```bash
-  npx prisma migrate dev --name your_migration_name
-  ```
-
-- **Reset database (dev only):**
-  ```bash
-  npx prisma migrate reset
-  ```
-
-## 🔗 Related Projects
-
-- **Client Repository:** [where-is-waldo](https://github.com/ChoforJr/where-is-waldo)
-
-## 👨‍💻 Author
-
-**FORSAKANG CHOFOR JUNIOR**
-
-- [GitHub](https://github.com/ChoforJr)
-- [LinkedIn](https://www.linkedin.com/in/choforforsakang/)
+For deployment set exact comma-separated frontend origins in `ALLOWED_ORIGINS`, apply migrations with `prisma migrate deploy`, and use HTTPS so production session cookies are secure. Production auth cookies use `SameSite=None; Secure` for cross-origin frontend/API deployments, while state-changing auth requests validate the configured origin.
